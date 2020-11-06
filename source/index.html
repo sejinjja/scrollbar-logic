@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style>
+    .container {
+      position: relative;
+    }
+
+    .scroll-wrapper {
+      overflow: auto;
+      height: 390px;
+    }
+
+    .contents {
+      height: 140080px;
+    }
+
+    .scroll-bar-track {
+      position: absolute;
+      right: 30px;
+      top: 0;
+      width: 30px;
+      height: 100%;
+      background: blue;
+    }
+
+    .scroll-bar-thumb {
+      position: relative;
+      width: 100%;
+      height: 30px;
+      background: red;
+    }
+  </style>
+  <script type="text/javascript">
+    let scrollWrapper
+    let scrollBarThumb
+    let scrollBarTrack
+    function setTop( dom, px ) {
+      dom.style.top = `${px}px`
+    }
+
+    function getTop( dom ) {
+      return dom.offsetTop
+    }
+
+    function scrollBarThumbTop(px) {
+      // scrollBarThumb의 위치로 스크롤을 조정 합니다.
+      setTop(scrollBarThumb, px)
+      const scrollBarThumbTop = getTop( scrollBarThumb )
+      const { clientHeight: scrollBarThumbClientHeight } = scrollBarThumb
+      const { scrollTop, clientHeight, scrollHeight } = scrollWrapper
+      // clientHeight ::::::: scrollBarThumbClientHeight
+      const { clientHeight: scrollBarTrackClientHeight } = scrollBarTrack
+      // scrollBarTrackClientHeight ::::::: scrollHeight
+      // scrollBarThumbTop ::::::: scrollTop
+
+      // scrollTop = scrollBarThumbTop / (scrollBarTrackClientHeight - scrollBarThumbClientHeight) * scrollHeight
+      const adjustScrollTop = scrollBarThumbTop / (scrollBarTrackClientHeight - scrollBarThumbClientHeight) * scrollHeight
+      scrollWrapper.scrollTo(0, adjustScrollTop)
+
+      if( clientHeight + scrollTop === scrollHeight ) {
+        if( scrollBarThumbClientHeight + scrollBarThumbTop === scrollBarTrackClientHeight ) {
+          console.log( 'correct scrolltop max' )
+        }
+      }
+      console.log('scrollTop', scrollTop)
+      console.log('scrollBarThumbTop', scrollBarThumbTop)
+    }
+
+    document.addEventListener( 'DOMContentLoaded', function() {
+      scrollWrapper = document.getElementsByClassName( 'scroll-wrapper' )[0]
+      scrollBarThumb = document.getElementsByClassName( 'scroll-bar-thumb' )[0]
+      scrollBarTrack = document.getElementsByClassName( 'scroll-bar-track' )[0]
+
+      // 스크롤로 thumb의 위치를 결정 합니다.
+      scrollWrapper.addEventListener( 'scroll', function( ) {
+        const { scrollTop, clientHeight, scrollHeight } = this
+        console.log( 'scrollTop, clientHeight, scrollHeight', scrollTop, clientHeight, scrollHeight )
+        const { clientHeight: scrollBarThumbClientHeight } = scrollBarThumb
+        console.log( 'scrollBarThumbClientHeight', scrollBarThumbClientHeight )
+        // clientHeight ::::::: scrollBarThumbClientHeight
+        const { clientHeight: scrollBarTrackClientHeight } = scrollBarTrack
+        console.log( 'scrollBarTrackClientHeight', scrollBarTrackClientHeight )
+        // scrollBarTrackClientHeight ::::::: scrollHeight
+        // scrollBarThumbTop ::::::: scrollTop
+        // scrollBarThumbTop = scrollTop / (scrollHeight - clientHeight) * scrollBarTrackClientHeight
+        setTop( scrollBarThumb, scrollTop / (scrollHeight - clientHeight) * (scrollBarTrackClientHeight - scrollBarThumbClientHeight) )
+        const scrollBarThumbTop = getTop( scrollBarThumb )
+        console.log( 'scrollBarThumbTop', scrollBarThumbTop )
+        if( clientHeight + scrollTop === scrollHeight ) {
+          if( scrollBarThumbClientHeight + scrollBarThumbTop === scrollBarTrackClientHeight ) {
+            console.log( 'correct scrolltop max' )
+          }
+        }
+      } )
+    } )
+  </script>
+</head>
+<body>
+<div class="container">
+  <div class="scroll-wrapper">
+    <div class="contents"></div>
+  </div>
+  <div class="scroll-bar-track">
+    <div class="scroll-bar-thumb"></div>
+  </div>
+</div>
+</body>
+</html>
