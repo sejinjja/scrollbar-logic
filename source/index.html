@@ -59,8 +59,8 @@
       // scrollBarTrackClientHeight ::::::: scrollHeight
       // scrollBarThumbTop ::::::: scrollTop
 
-      // scrollTop = scrollBarThumbTop / (scrollBarTrackClientHeight - scrollBarThumbClientHeight) * scrollHeight
-      const adjustScrollTop = scrollBarThumbTop / (scrollBarTrackClientHeight - scrollBarThumbClientHeight) * scrollHeight
+      // scrollTop = scrollBarThumbTop / (scrollBarTrackClientHeight - scrollBarThumbClientHeight) * (scrollHeight - clientHeight)
+      const adjustScrollTop = scrollBarThumbTop / (scrollBarTrackClientHeight - scrollBarThumbClientHeight) * (scrollHeight - clientHeight)
       scrollWrapper.scrollTo(0, adjustScrollTop)
 
       if( clientHeight + scrollTop === scrollHeight ) {
